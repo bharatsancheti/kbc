@@ -1,29 +1,72 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>धर्म ज्ञान प्रतियोगिता — KBC</title>
-  <link rel="stylesheet" href="style.css" />
-  <meta name="theme-color" content="#020B1C" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>जैन धर्म ज्ञान प्रतियोगिता</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="rounds.css"/>
 </head>
 <body>
-<!-- Animated Background Canvas -->
+
 <canvas id="bg-canvas"></canvas>
-
-<!-- Floating Particles -->
 <div class="particles-container" id="particles-container"></div>
-
-<!-- Confetti Container -->
 <div class="confetti-container" id="confetti-container"></div>
-
-<!-- Fullscreen Button -->
 <button class="fullscreen-btn" id="fullscreen-btn" title="Full Screen">⛶</button>
-
-<!-- Toast Notification -->
 <div class="toast" id="toast"></div>
 
-<!-- ==================== SUSPENSE OVERLAY ==================== -->
+<!-- ========== ROUND SELECTOR SCREEN ========== -->
+<div id="round-selector" class="round-selector-screen">
+  <div class="rs-inner">
+    <div class="rs-top-label">✦ जैन धर्म ज्ञान महोत्सव ✦</div>
+    <h1 class="rs-title">JAIN DHARMA QUIZ</h1>
+    <div class="rs-subtitle">कौन बनेगा धर्म विशेषज्ञ?</div>
+    <div class="rs-divider"></div>
+    <div class="rs-cards">
+
+      <div class="rs-card" onclick="startRound('round1A')">
+        <div class="rs-card-num">01</div>
+        <div class="rs-card-icon">🏆</div>
+        <div class="rs-card-title">Round 1 — A</div>
+        <div class="rs-card-desc">सामान्य ज्ञान<br/>KBC Style • 4 Lifelines</div>
+        <div class="rs-card-tag">NORMAL</div>
+      </div>
+
+      <div class="rs-card" onclick="startRound('round1B')">
+        <div class="rs-card-num">02</div>
+        <div class="rs-card-icon">🎯</div>
+        <div class="rs-card-title">Round 1 — B</div>
+        <div class="rs-card-desc">मध्यम स्तर<br/>KBC Style • 4 Lifelines</div>
+        <div class="rs-card-tag">NORMAL</div>
+      </div>
+
+      <div class="rs-card rapid-card" onclick="startRound('rapidfire')">
+        <div class="rs-card-num">03</div>
+        <div class="rs-card-icon">⚡</div>
+        <div class="rs-card-title">Rapid Fire Round</div>
+        <div class="rs-card-desc">10 सेकंड प्रति प्रश्न<br/>जल्दी उत्तर दें!</div>
+        <div class="rs-card-tag rapid-tag">RAPID</div>
+      </div>
+
+      <div class="rs-card av-card" onclick="startRound('audiovisual')">
+        <div class="rs-card-num">04</div>
+        <div class="rs-card-icon">🎵</div>
+        <div class="rs-card-title">Audio Visual Round</div>
+        <div class="rs-card-desc">Audio सुनो, उत्तर दो<br/>कान लगाओ!</div>
+        <div class="rs-card-tag av-tag">AUDIO</div>
+      </div>
+
+    </div>
+    <div class="rs-scoreboard" id="rs-scoreboard">
+      <div class="rs-score-item">Total Score <span id="rs-total-score">0</span></div>
+      <div class="rs-score-item correct-col">✅ सही <span id="rs-correct">0</span></div>
+      <div class="rs-score-item wrong-col">❌ गलत <span id="rs-wrong">0</span></div>
+    </div>
+    <button class="rs-reset-btn" onclick="resetAllScores()">🔄 सभी Score Reset करें</button>
+  </div>
+</div>
+
+<!-- ========== SUSPENSE OVERLAY ========== -->
 <div class="suspense-overlay" id="suspense-overlay">
   <div class="suspense-circle">
     <div class="suspense-inner"></div>
@@ -31,7 +74,7 @@
   </div>
 </div>
 
-<!-- ==================== AUDIENCE POLL OVERLAY ==================== -->
+<!-- ========== AUDIENCE POLL ========== -->
 <div class="poll-overlay" id="poll-overlay">
   <div class="poll-box">
     <div class="poll-title">🎭 AUDIENCE POLL</div>
@@ -40,7 +83,7 @@
   </div>
 </div>
 
-<!-- ==================== EXPERT ADVICE OVERLAY ==================== -->
+<!-- ========== EXPERT ADVICE ========== -->
 <div class="expert-overlay" id="expert-overlay">
   <div class="expert-box">
     <div class="expert-avatar">🧘</div>
@@ -51,99 +94,102 @@
   </div>
 </div>
 
-<!-- ==================== RESULT SCREEN ==================== -->
+<!-- ========== ROUND RESULT OVERLAY ========== -->
+<div class="round-result-overlay" id="round-result-overlay">
+  <div class="rr-box">
+    <div class="rr-trophy" id="rr-trophy">🏆</div>
+    <div class="rr-title" id="rr-title">Round Complete!</div>
+    <div class="rr-stats" id="rr-stats"></div>
+    <div class="rr-buttons">
+      <button class="rr-btn gold" onclick="goToRoundSelector()">🏠 Round Select करें</button>
+      <button class="rr-btn cyan" id="rr-next-btn" onclick="goNextRound()">अगला Round ▶</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== FINAL RESULT ========== -->
 <div class="result-screen" id="result-screen">
   <div class="result-trophy" id="result-trophy">🏆</div>
   <div class="result-title" id="result-title">शाबाश!</div>
-  <div class="result-subtitle" id="result-subtitle">प्रतियोगिता समाप्त हुई</div>
+  <div class="result-subtitle" id="result-subtitle">प्रतियोगिता समाप्त</div>
   <div class="result-stats">
-    <div class="result-stat-card">
-      <div class="result-stat-val" id="r-score">0</div>
-      <div class="result-stat-lbl">कुल स्कोर</div>
-    </div>
-    <div class="result-stat-card green">
-      <div class="result-stat-val" id="r-correct">0</div>
-      <div class="result-stat-lbl">सही उत्तर</div>
-    </div>
-    <div class="result-stat-card red">
-      <div class="result-stat-val" id="r-wrong">0</div>
-      <div class="result-stat-lbl">गलत उत्तर</div>
-    </div>
-    <div class="result-stat-card cyan">
-      <div class="result-stat-val" id="r-pct">0%</div>
-      <div class="result-stat-lbl">प्रतिशत</div>
-    </div>
+    <div class="result-stat-card"><div class="result-stat-val" id="r-score">0</div><div class="result-stat-lbl">कुल स्कोर</div></div>
+    <div class="result-stat-card green"><div class="result-stat-val" id="r-correct">0</div><div class="result-stat-lbl">सही उत्तर</div></div>
+    <div class="result-stat-card red"><div class="result-stat-val" id="r-wrong">0</div><div class="result-stat-lbl">गलत उत्तर</div></div>
+    <div class="result-stat-card cyan"><div class="result-stat-val" id="r-pct">0%</div><div class="result-stat-lbl">प्रतिशत</div></div>
   </div>
   <div class="result-msg" id="result-msg"></div>
-  <button class="result-btn" onclick="resetGame()">🔄 नया खेल शुरू करें</button>
+  <button class="result-btn" onclick="fullReset()">🔄 नया खेल शुरू करें</button>
 </div>
 
-<!-- ==================== ADMIN MODAL ==================== -->
+<!-- ========== ADMIN MODAL ========== -->
 <div class="admin-modal" id="admin-modal">
   <div class="admin-box">
-
-    <!-- Login Screen -->
     <div id="admin-login-screen">
       <div class="admin-login">
         <div class="admin-login-title">🔐 Admin Panel</div>
-        <div class="pw-wrapper">
-          <input type="password" id="admin-pw-input" placeholder="पासवर्ड दर्ज करें" onkeydown="if(event.key==='Enter')adminLogin()" />
-        </div>
+        <div class="pw-wrapper"><input type="password" id="admin-pw-input" placeholder="पासवर्ड दर्ज करें" onkeydown="if(event.key==='Enter')adminLogin()"/></div>
         <div style="display:flex;gap:10px;justify-content:center;">
-          <button class="admin-btn success" onclick="adminLogin()">Login करें</button>
+          <button class="admin-btn success" onclick="adminLogin()">Login</button>
           <button class="admin-btn danger" onclick="closeAdmin()">रद्द करें</button>
         </div>
-        <p style="margin-top:14px;font-size:12px;color:#8BAFD4;">Default password: <strong style="color:#FFD700">jain1234</strong></p>
+        <p style="margin-top:14px;font-size:12px;color:#8BAFD4;">Default: <strong style="color:#FFD700">jain1234</strong></p>
       </div>
     </div>
-
-    <!-- Admin Panel Content -->
-    <div id="admin-panel-content" style="display:none;">
+    <div id="admin-panel-content" style="display:none">
       <div class="admin-header-row">
         <div class="admin-title">⚙️ Admin Panel</div>
-        <div style="display:flex;gap:8px;">
-          <button class="admin-btn success" onclick="downloadJSON()">⬇ JSON डाउनलोड</button>
-          <button class="admin-btn" onclick="document.getElementById('upload-json').click()">⬆ JSON अपलोड</button>
-          <input type="file" id="upload-json" accept=".json" style="display:none" onchange="uploadJSON(event)" />
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="admin-btn success" onclick="downloadJSON()">⬇ Download</button>
+          <button class="admin-btn" onclick="document.getElementById('upload-json').click()">⬆ Upload</button>
+          <input type="file" id="upload-json" accept=".json" style="display:none" onchange="uploadJSON(event)"/>
           <button class="admin-close-btn" onclick="closeAdmin()">✕</button>
         </div>
       </div>
-
-      <!-- Add / Edit Question -->
       <div class="admin-section">
-        <div class="admin-section-title">प्रश्न जोड़ें / संपादित करें</div>
-        <input type="hidden" id="edit-index" value="-1" />
-        <input class="admin-input" id="q-input" placeholder="प्रश्न लिखें..." />
-        <div class="admin-options-grid">
-          <input class="admin-input" id="o0-input" placeholder="विकल्प A" style="margin-bottom:0" />
-          <input class="admin-input" id="o1-input" placeholder="विकल्प B" style="margin-bottom:0" />
-          <input class="admin-input" id="o2-input" placeholder="विकल्प C" style="margin-bottom:0" />
-          <input class="admin-input" id="o3-input" placeholder="विकल्प D" style="margin-bottom:0" />
-        </div>
-        <div class="admin-row" style="margin-top:10px;">
-          <label style="color:#8BAFD4;font-size:14px;">सही उत्तर:</label>
-          <select class="admin-select" id="correct-select" style="width:auto;margin-bottom:0;flex:1">
-            <option value="0">A</option>
-            <option value="1">B</option>
-            <option value="2">C</option>
-            <option value="3">D</option>
-          </select>
-          <button class="admin-btn success" onclick="saveQuestion()">💾 सहेजें</button>
-          <button class="admin-btn" onclick="clearForm()">🗑 साफ करें</button>
+        <div class="admin-section-title">Round चुनें</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="admin-btn" onclick="adminSetRound('round1A')" id="arb-r1a">Round 1A</button>
+          <button class="admin-btn" onclick="adminSetRound('round1B')" id="arb-r1b">Round 1B</button>
+          <button class="admin-btn" onclick="adminSetRound('rapidfire')" id="arb-rf">Rapid Fire</button>
+          <button class="admin-btn" onclick="adminSetRound('audiovisual')" id="arb-av">Audio Visual</button>
         </div>
       </div>
-
-      <!-- Questions List -->
+      <div class="admin-section">
+        <div class="admin-section-title">प्रश्न जोड़ें / संपादित करें</div>
+        <input type="hidden" id="edit-index" value="-1"/>
+        <input class="admin-input" id="q-input" placeholder="प्रश्न लिखें..."/>
+        <div id="av-audio-row" style="display:none">
+          <input class="admin-input" id="av-audio-src" placeholder="Audio file path (जैसे: sounds/av/av1.mp3)"/>
+          <input class="admin-input" id="av-audio-hint" placeholder="Audio hint text (जैसे: 🎵 एक स्तुति सुनाई जा रही है...)"/>
+        </div>
+        <div id="rf-answer-row" style="display:none">
+          <input class="admin-input" id="rf-answer" placeholder="सही उत्तर (Rapid Fire के लिए)"/>
+        </div>
+        <div class="admin-options-grid" id="options-input-grid">
+          <input class="admin-input" id="o0-input" placeholder="विकल्प A" style="margin-bottom:0"/>
+          <input class="admin-input" id="o1-input" placeholder="विकल्प B" style="margin-bottom:0"/>
+          <input class="admin-input" id="o2-input" placeholder="विकल्प C" style="margin-bottom:0"/>
+          <input class="admin-input" id="o3-input" placeholder="विकल्प D" style="margin-bottom:0"/>
+        </div>
+        <div class="admin-row" style="margin-top:10px;" id="correct-select-row">
+          <label style="color:#8BAFD4;font-size:14px;">सही उत्तर:</label>
+          <select class="admin-select" id="correct-select" style="width:auto;margin-bottom:0;flex:1">
+            <option value="0">A</option><option value="1">B</option>
+            <option value="2">C</option><option value="3">D</option>
+          </select>
+          <button class="admin-btn success" onclick="saveQuestion()">💾 सहेजें</button>
+          <button class="admin-btn" onclick="clearForm()">🗑 साफ</button>
+        </div>
+      </div>
       <div class="admin-section">
         <div class="admin-section-title">प्रश्न सूची (<span id="q-count-admin">0</span>)</div>
         <div class="admin-questions-list" id="admin-questions-list"></div>
       </div>
-
-      <!-- Change Password -->
       <div class="admin-section">
         <div class="admin-section-title">पासवर्ड बदलें</div>
         <div class="admin-row">
-          <input class="admin-input" id="new-pw" type="password" placeholder="नया पासवर्ड" style="margin-bottom:0;flex:1" />
+          <input class="admin-input" id="new-pw" type="password" placeholder="नया पासवर्ड" style="margin-bottom:0;flex:1"/>
           <button class="admin-btn" onclick="changePassword()">बदलें</button>
         </div>
       </div>
@@ -151,84 +197,49 @@
   </div>
 </div>
 
-<!-- ==================== MAIN APP ==================== -->
+<!-- ========== KBC NORMAL ROUND ========== -->
+<div id="kbc-game" style="display:none">
 <div id="app">
-
-  <!-- Header -->
   <header class="kbc-header">
+    <div class="round-badge" id="kbc-round-badge">ROUND 1</div>
     <div class="kbc-title-top">✦ जैन धर्म ज्ञान महोत्सव ✦</div>
     <h1 class="kbc-title-main">JAIN DHARMA QUIZ</h1>
-    <div class="kbc-subtitle">कौन बनेगा धर्म विशेषज्ञ?</div>
     <div class="header-divider"></div>
   </header>
-
-  <!-- Scoreboard -->
   <div class="scoreboard">
-    <div class="score-chip">
-      🏅 स्कोर <span class="chip-val" id="score-display">0</span>
-    </div>
-    <div class="score-chip correct-chip">
-      ✅ सही <span class="chip-val" id="correct-display">0</span>
-    </div>
-    <div class="score-chip wrong-chip">
-      ❌ गलत <span class="chip-val" id="wrong-display">0</span>
-    </div>
-    <div class="score-chip pct-chip">
-      📊 <span class="chip-val" id="pct-display">0%</span>
-    </div>
+    <div class="score-chip">🏅 स्कोर <span class="chip-val" id="score-display">0</span></div>
+    <div class="score-chip correct-chip">✅ सही <span class="chip-val" id="correct-display">0</span></div>
+    <div class="score-chip wrong-chip">❌ गलत <span class="chip-val" id="wrong-display">0</span></div>
+    <div class="score-chip pct-chip">📊 <span class="chip-val" id="pct-display">0%</span></div>
+    <button class="back-to-menu-btn" onclick="confirmBackToMenu()">🏠 Menu</button>
   </div>
-
-  <!-- Game Layout -->
   <div class="game-layout">
-
-    <!-- LEFT: Lifelines + Timer -->
     <div class="side-panel">
       <div class="lifelines-title">LIFELINES</div>
-
       <button class="lifeline-btn" id="ll-5050" onclick="use5050()">
         <span class="lifeline-icon">5️⃣0️⃣</span>
-        <div class="lifeline-info">
-          <div class="lifeline-name">50:50</div>
-          <div class="lifeline-desc">दो गलत हटाएं</div>
-        </div>
+        <div class="lifeline-info"><div class="lifeline-name">50:50</div><div class="lifeline-desc">दो गलत हटाएं</div></div>
         <span class="lifeline-used-badge">USED</span>
       </button>
-
       <button class="lifeline-btn" id="ll-poll" onclick="useAudiencePoll()">
         <span class="lifeline-icon">📊</span>
-        <div class="lifeline-info">
-          <div class="lifeline-name">AUDIENCE POLL</div>
-          <div class="lifeline-desc">दर्शकों की राय</div>
-        </div>
+        <div class="lifeline-info"><div class="lifeline-name">AUDIENCE POLL</div><div class="lifeline-desc">दर्शकों की राय</div></div>
         <span class="lifeline-used-badge">USED</span>
       </button>
-
       <button class="lifeline-btn" id="ll-expert" onclick="useExpert()">
         <span class="lifeline-icon">🧘</span>
-        <div class="lifeline-info">
-          <div class="lifeline-name">EXPERT ADVICE</div>
-          <div class="lifeline-desc">विशेषज्ञ की सलाह</div>
-        </div>
+        <div class="lifeline-info"><div class="lifeline-name">EXPERT ADVICE</div><div class="lifeline-desc">विशेषज्ञ की सलाह</div></div>
         <span class="lifeline-used-badge">USED</span>
       </button>
-
       <button class="lifeline-btn" id="ll-pass" onclick="usePass()">
         <span class="lifeline-icon">⏭️</span>
-        <div class="lifeline-info">
-          <div class="lifeline-name">QUESTION PASS</div>
-          <div class="lifeline-desc">प्रश्न छोड़ें</div>
-        </div>
+        <div class="lifeline-info"><div class="lifeline-name">QUESTION PASS</div><div class="lifeline-desc">प्रश्न छोड़ें</div></div>
         <span class="lifeline-used-badge">USED</span>
       </button>
-
-      <!-- Timer -->
       <div class="timer-panel">
         <div class="timer-label">⏱ TIMER</div>
         <div class="timer-circle" id="timer-circle">
-          <svg viewBox="0 0 80 80">
-            <circle class="bg-ring" cx="40" cy="40" r="34" />
-            <circle class="fg-ring" id="timer-ring" cx="40" cy="40" r="34" />
-          </svg>
+          <svg viewBox="0 0 80 80"><circle class="bg-ring" cx="40" cy="40" r="34"/><circle class="fg-ring" id="timer-ring" cx="40" cy="40" r="34"/></svg>
           <div class="timer-number" id="timer-number">—</div>
         </div>
         <div class="timer-controls">
@@ -239,99 +250,128 @@
         </div>
       </div>
     </div>
-
-    <!-- CENTER: Question Panel -->
     <div class="question-panel">
-
-      <!-- Counter + Progress -->
       <div class="q-counter-bar">
-        <span class="q-counter-text" id="q-counter">प्रश्न 1 / 20</span>
-        <div class="q-progress-bar">
-          <div class="q-progress-fill" id="q-progress-fill" style="width:5%"></div>
-        </div>
+        <span class="q-counter-text" id="q-counter">प्रश्न 1/10</span>
+        <div class="q-progress-bar"><div class="q-progress-fill" id="q-progress-fill" style="width:10%"></div></div>
       </div>
-
-      <!-- Question Card -->
       <div class="question-card" id="question-card">
-        <div class="question-text" id="question-text">प्रश्न लोड हो रहा है...</div>
+        <div class="question-text" id="question-text">Loading...</div>
       </div>
-
-      <!-- Options -->
       <div class="options-grid" id="options-grid">
-        <button class="option-btn" id="opt-0" onclick="selectOption(0)">
-          <span class="option-letter">A</span>
-          <span class="option-text" id="opt-text-0">—</span>
-        </button>
-        <button class="option-btn" id="opt-1" onclick="selectOption(1)">
-          <span class="option-letter">B</span>
-          <span class="option-text" id="opt-text-1">—</span>
-        </button>
-        <button class="option-btn" id="opt-2" onclick="selectOption(2)">
-          <span class="option-letter">C</span>
-          <span class="option-text" id="opt-text-2">—</span>
-        </button>
-        <button class="option-btn" id="opt-3" onclick="selectOption(3)">
-          <span class="option-letter">D</span>
-          <span class="option-text" id="opt-text-3">—</span>
-        </button>
+        <button class="option-btn" id="opt-0" onclick="selectOption(0)"><span class="option-letter">A</span><span class="option-text" id="opt-text-0">—</span></button>
+        <button class="option-btn" id="opt-1" onclick="selectOption(1)"><span class="option-letter">B</span><span class="option-text" id="opt-text-1">—</span></button>
+        <button class="option-btn" id="opt-2" onclick="selectOption(2)"><span class="option-letter">C</span><span class="option-text" id="opt-text-2">—</span></button>
+        <button class="option-btn" id="opt-3" onclick="selectOption(3)"><span class="option-letter">D</span><span class="option-text" id="opt-text-3">—</span></button>
       </div>
-
-      <!-- Lock Confirmation -->
       <div class="lock-confirmation" id="lock-confirmation">
         <div class="lock-question-text">🔒 Lock Kiya Jaye?</div>
         <div class="lock-buttons">
           <button class="btn-lock-yes" onclick="confirmLock()">✅ हाँ, Lock करें!</button>
-          <button class="btn-lock-no"  onclick="cancelLock()">↩ वापस जाएं</button>
+          <button class="btn-lock-no" onclick="cancelLock()">↩ वापस जाएं</button>
         </div>
       </div>
-
-      <!-- Navigation Buttons -->
       <div class="nav-buttons">
         <button class="nav-btn" id="btn-prev" onclick="prevQuestion()">◀ पिछला</button>
         <button class="nav-btn primary" id="btn-next" onclick="nextQuestion()">अगला ▶</button>
         <button class="nav-btn" onclick="randomQuestion()">🔀 रैंडम</button>
-        <button class="nav-btn" onclick="showResult()">🏁 परिणाम</button>
+        <button class="nav-btn" onclick="endCurrentRound()">🏁 Round End</button>
       </div>
-
     </div>
-
-    <!-- RIGHT: Question Navigator -->
     <div class="side-panel">
       <div class="question-nav-panel">
         <div class="q-nav-title">QUESTIONS</div>
         <div class="q-nav-grid" id="q-nav-grid"></div>
       </div>
     </div>
+  </div>
+</div>
+</div>
 
-  </div><!-- /game-layout -->
-</div><!-- /app -->
+<!-- ========== RAPID FIRE ROUND ========== -->
+<div id="rapid-game" style="display:none">
+  <div class="rapid-container">
+    <div class="rapid-header">
+      <div class="rapid-title">⚡ RAPID FIRE ROUND ⚡</div>
+      <button class="back-to-menu-btn" onclick="confirmBackToMenu()">🏠 Menu</button>
+    </div>
+    <div class="rapid-score-row">
+      <div class="rapid-score-chip">✅ सही: <span id="rf-correct">0</span></div>
+      <div class="rapid-score-chip">❌ गलत: <span id="rf-wrong">0</span></div>
+      <div class="rapid-score-chip">📋 प्रश्न: <span id="rf-qnum">1</span>/<span id="rf-qtotal">12</span></div>
+    </div>
+    <div class="rapid-timer-bar-wrap">
+      <div class="rapid-timer-bar" id="rf-timer-bar"></div>
+    </div>
+    <div class="rapid-timer-num" id="rf-timer-num">10</div>
+    <div class="rapid-question-card" id="rf-question-card">
+      <div class="rapid-q-text" id="rf-q-text">प्रश्न लोड हो रहा है...</div>
+    </div>
+    <div class="rapid-answer-reveal" id="rf-answer-reveal" style="display:none">
+      <span class="rf-answer-label">✅ सही उत्तर:</span>
+      <span class="rf-answer-text" id="rf-answer-text">—</span>
+    </div>
+    <div class="rapid-controls">
+      <button class="rapid-btn correct-btn" id="rf-correct-btn" onclick="rapidMark(true)">✅ सही</button>
+      <button class="rapid-btn skip-btn" onclick="rapidSkip()">⏭ Skip</button>
+      <button class="rapid-btn wrong-btn" id="rf-wrong-btn" onclick="rapidMark(false)">❌ गलत</button>
+    </div>
+    <div class="rapid-progress-dots" id="rf-dots"></div>
+  </div>
+</div>
 
-<!-- Admin Toggle Button -->
-<button class="admin-toggle" onclick="openAdmin()" title="Admin Panel">⚙</button>
+<!-- ========== AUDIO VISUAL ROUND ========== -->
+<div id="av-game" style="display:none">
+  <div class="av-container">
+    <div class="av-header">
+      <div class="av-title">🎵 AUDIO VISUAL ROUND 🎵</div>
+      <button class="back-to-menu-btn" onclick="confirmBackToMenu()">🏠 Menu</button>
+    </div>
+    <div class="av-score-row">
+      <div class="rapid-score-chip">✅ सही: <span id="av-correct">0</span></div>
+      <div class="rapid-score-chip">❌ गलत: <span id="av-wrong">0</span></div>
+      <div class="rapid-score-chip">🎵 प्रश्न: <span id="av-qnum">1</span>/<span id="av-qtotal">5</span></div>
+    </div>
+    <div class="av-player-box">
+      <div class="av-audio-hint" id="av-audio-hint">🎵 Play बटन दबाएं और ध्यान से सुनें...</div>
+      <div class="av-visualizer" id="av-visualizer">
+        <div class="av-wave-bar"></div><div class="av-wave-bar"></div><div class="av-wave-bar"></div>
+        <div class="av-wave-bar"></div><div class="av-wave-bar"></div><div class="av-wave-bar"></div>
+        <div class="av-wave-bar"></div><div class="av-wave-bar"></div><div class="av-wave-bar"></div>
+      </div>
+      <audio id="av-audio-player" onended="avAudioEnded()"></audio>
+      <div class="av-controls">
+        <button class="av-play-btn" id="av-play-btn" onclick="avPlayAudio()">▶ Audio सुनें</button>
+        <button class="av-play-btn av-replay-btn" onclick="avReplayAudio()">🔁 फिर सुनें</button>
+      </div>
+    </div>
+    <div class="av-question-card" id="av-question-card">
+      <div class="av-q-text" id="av-q-text">पहले Audio सुनें, फिर उत्तर दें</div>
+    </div>
+    <div class="options-grid av-options" id="av-options-grid">
+      <button class="option-btn" id="av-opt-0" onclick="avSelectOption(0)"><span class="option-letter">A</span><span class="option-text" id="av-opt-text-0">—</span></button>
+      <button class="option-btn" id="av-opt-1" onclick="avSelectOption(1)"><span class="option-letter">B</span><span class="option-text" id="av-opt-text-1">—</span></button>
+      <button class="option-btn" id="av-opt-2" onclick="avSelectOption(2)"><span class="option-letter">C</span><span class="option-text" id="av-opt-text-2">—</span></button>
+      <button class="option-btn" id="av-opt-3" onclick="avSelectOption(3)"><span class="option-letter">D</span><span class="option-text" id="av-opt-text-3">—</span></button>
+    </div>
+    <div class="lock-confirmation" id="av-lock-confirmation">
+      <div class="lock-question-text">🔒 Lock Kiya Jaye?</div>
+      <div class="lock-buttons">
+        <button class="btn-lock-yes" onclick="avConfirmLock()">✅ हाँ, Lock करें!</button>
+        <button class="btn-lock-no" onclick="avCancelLock()">↩ वापस जाएं</button>
+      </div>
+    </div>
+    <div class="nav-buttons" style="margin-top:12px">
+      <button class="nav-btn primary" id="av-next-btn" onclick="avNextQuestion()" style="display:none">अगला ▶</button>
+      <button class="nav-btn" onclick="endCurrentRound()">🏁 Round End</button>
+    </div>
+  </div>
+</div>
 
-<!-- ==================== AUDIO SECTION ==================== -->
-<!--
-  AUDIO REPLACEMENT INSTRUCTIONS:
-  =============================================
-  Replace the placeholder src values below with your actual audio files.
-  Recommended formats: MP3 (best compatibility) or OGG.
+<!-- Admin Toggle -->
+<button class="admin-toggle" onclick="openAdmin()" title="Admin">⚙</button>
 
-  Files to replace:
-  - sounds/intro.mp3       → Intro/Welcome music (plays on page load)
-  - sounds/question.mp3    → Background music during question display
-  - sounds/suspense.mp3    → 3-second suspense before answer reveal
-  - sounds/correct.mp3     → Correct answer celebration sound
-  - sounds/wrong.mp3       → Wrong answer sound effect
-  - sounds/lifeline.mp3    → Lifeline activation sound
-  - sounds/winner.mp3      → Final winner celebration music
-  - sounds/timer_warn.mp3  → Timer warning (plays when < 10 sec left)
-
-  STEPS:
-  1. Create a folder named "sounds" next to this HTML file
-  2. Add your MP3 files with the exact names listed above
-  3. The sounds will automatically play at the right moments
-  =============================================
--->
+<!-- Audio Elements -->
 <audio id="snd-intro"      src="sounds/intro.mp3"      preload="auto" loop></audio>
 <audio id="snd-question"   src="sounds/question.mp3"   preload="auto" loop></audio>
 <audio id="snd-suspense"   src="sounds/suspense.mp3"   preload="auto"></audio>
@@ -340,7 +380,9 @@
 <audio id="snd-lifeline"   src="sounds/lifeline.mp3"   preload="auto"></audio>
 <audio id="snd-winner"     src="sounds/winner.mp3"     preload="auto"></audio>
 <audio id="snd-timer-warn" src="sounds/timer_warn.mp3" preload="auto"></audio>
+<audio id="snd-rapid-tick" src="sounds/timer_warn.mp3" preload="auto"></audio>
 
 <script src="script.js"></script>
+<script src="rounds.js"></script>
 </body>
 </html>

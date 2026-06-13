@@ -156,12 +156,12 @@
 <div id="app">
 
   <!-- Header -->
-  <header class="kbc-header">
+  <header class="kbc-header" style="visibility:hidden; height:0; padding:0; margin:0; overflow:hidden;">
     <div class="kbc-title-top">✦ जैन धर्म ज्ञान महोत्सव ✦</div>
     <h1 class="kbc-title-main">JAIN DHARMA QUIZ</h1>
     <div class="kbc-subtitle">कौन बनेगा धर्म विशेषज्ञ?</div>
     <div class="header-divider"></div>
-  </header>
+</header>
 
   <!-- Scoreboard -->
   <div class="scoreboard">
@@ -195,14 +195,7 @@
         <span class="lifeline-used-badge">USED</span>
       </button>
 
-      <button class="lifeline-btn" id="ll-poll" onclick="useAudiencePoll()">
-        <span class="lifeline-icon">📊</span>
-        <div class="lifeline-info">
-          <div class="lifeline-name">AUDIENCE POLL</div>
-          <div class="lifeline-desc">दर्शकों की राय</div>
-        </div>
-        <span class="lifeline-used-badge">USED</span>
-      </button>
+      
 
       <button class="lifeline-btn" id="ll-expert" onclick="useExpert()">
         <span class="lifeline-icon">🧘</span>
@@ -213,15 +206,7 @@
         <span class="lifeline-used-badge">USED</span>
       </button>
 
-      <button class="lifeline-btn" id="ll-pass" onclick="usePass()">
-        <span class="lifeline-icon">⏭️</span>
-        <div class="lifeline-info">
-          <div class="lifeline-name">QUESTION PASS</div>
-          <div class="lifeline-desc">प्रश्न छोड़ें</div>
-        </div>
-        <span class="lifeline-used-badge">USED</span>
-      </button>
-
+      
       <!-- Timer -->
       <div class="timer-panel">
         <div class="timer-label">⏱ TIMER</div>

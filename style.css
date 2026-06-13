@@ -191,7 +191,7 @@ body { min-height: 100vh; position: relative; }
 /* === MAIN GAME LAYOUT === */
 .game-layout {
   display: grid;
-  grid-template-columns: 1fr minmax(0, 820px) 1fr;
+  grid-template-columns: 280px 1fr 280px;
   gap: 16px;
   width: 100%;
   max-width: 1200px;
@@ -1430,4 +1430,83 @@ body { min-height: 100vh; position: relative; }
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.1ms !important; }
+}
+/* Hide default header text - background image has it */
+.kbc-title-top,
+.kbc-title-main,
+.kbc-subtitle,
+.header-divider {
+  display: none !important;
+}
+
+.kbc-header {
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 0 !important;
+}
+/* ============================================================
+   BACKGROUND IMAGE LAYOUT FIX
+   style.css के सबसे नीचे paste करें
+   ============================================================ */
+
+/* Header completely hide करें — background image में है */
+.kbc-header {
+  display: none !important;
+}
+
+/* Scoreboard को ऊपर से थोड़ा नीचे लाएं
+   ताकि "अखिल भारतीय तेरापंथ..." दिखे */
+.scoreboard {
+  margin-top: 400px !important;
+}
+
+/* Game layout — sides में कम space ताकि
+   "कौन करेगा शिखरारोहण" दिखे */
+.game-layout {
+  grid-template-columns: 400px 1fr 400px!important;
+  max-width: 100% !important;
+  padding: 0 8px !important;
+}
+
+/* Right side panel को थोड़ा transparent रखें
+   ताकि background text दिखे */
+.side-panel:last-child .question-nav-panel {
+  background: rgba(4, 21, 51, 0.75) !important;
+  max-width: 200px !important;
+  margin-left: auto !important;
+}
+
+/* Question nav grid छोटा करें */
+.q-nav-grid {
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+
+/* Question panel थोड़ा left में रखें */
+.question-panel {
+  max-width: 680px !important;
+}
+
+/* Option buttons थोड़े compact */
+.option-btn {
+  padding: 10px 14px !important;
+}
+
+/* App container को top padding दें */
+#app {
+  padding-top: 0 !important;
+}
+
+/* Lifeline + Timer panels semi-transparent */
+.lifeline-btn,
+.timer-panel {
+  background: rgba(4, 21, 51, 0.82) !important;
+}
+
+/* Score chips compact */
+.scoreboard {
+  gap: 8px !important;
+}
+.score-chip {
+  padding: 6px 14px !important;
+  font-size: 14px !important;
 }
